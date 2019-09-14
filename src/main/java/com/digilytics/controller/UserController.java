@@ -30,4 +30,21 @@ public class UserController {
 		return ResponseEntity.ok()
 				.body(map);
 	}
+
+	@GetMapping(value = "/download/{filepath}", produces = "multipart/form-data")
+	public void uploadMultipart(@PathVariable String filepath, HttpServletResponse response) throws IOException {
+
+		File file = new File("errors" + "/" + filepath);
+		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
+		response.setContentLength((int) file.length());
+		BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(file));
+		BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream());
+		byte[] buffer = new byte[1024];
+		int bytesRead = 0;
+		while ((bytesRead = inStream.read(buffer)) != -1) {
+			outStream.write(buffer, 0, bytesRead);
+		}
+		outStream.flush();
+		inStream.close();
+	}
 }
