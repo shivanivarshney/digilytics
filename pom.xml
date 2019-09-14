@@ -4,11 +4,11 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.digilytics</groupId>
-	<artifactId>spring-boot-demo</artifactId>
+	<artifactId>digilytics</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>spring-demo</name>
-	<description>Spring Boot Demo Project</description>
+	<name>digilytics</name>
+	<description>Digilytics Assignment</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
