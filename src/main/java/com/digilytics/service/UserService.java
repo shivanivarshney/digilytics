@@ -8,6 +8,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.opencsv.CSVWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -25,12 +26,16 @@ import java.util.regex.Pattern;
 @Service
 public class UserService implements IUserService {
 
+	private static String USER_ALREADY_EXISTS = "User already exists";
+	private static String INVALID_EMAIL = "Invalid Email";
+	private static String INVALID_ROLE = "Invalid Role ";
+
 	@Autowired
 	private IUserDAO userDAO;
 
 	@Override
 	public HashMap<String, String> addUser(InputStream file) throws IOException {
-		int successCount=0, totalRows=0, errorCount=0, i=1;
+		int totalRows=0, errorCount=0, i=1;
 		String filename = "";
 
 		List roles = userDAO.getAllRoles();
@@ -54,9 +59,16 @@ public class UserService implements IUserService {
 			user.setRole(row[2]);
 			String error = validateParameters(user, presentRoles);
 			if (error.equals("")) {
-				userDAO.addUser(user);
-			}
-			else {
+				try {
+					userDAO.addUser(user);
+				} catch (DataIntegrityViolationException e) {
+					UserError userError = new UserError();
+					userError.setError(USER_ALREADY_EXISTS);
+					userError.setUser(user);
+					errors.add(userError);
+					errorCount++;
+				}
+			} else {
 				UserError userError = new UserError();
 				userError.setError(error);
 				userError.setUser(user);
@@ -72,7 +84,7 @@ public class UserService implements IUserService {
 		HashMap<String, String> map = new LinkedHashMap<>();
 		map.put("no_of_rows_parsed", String.valueOf(totalRows));
 		map.put("no_of_rows_failed", String.valueOf(errorCount));
-		{map.put("error_file_url",filename);}
+		map.put("error_file_url",filename);
 		return map;
 	}
 
@@ -83,7 +95,7 @@ public class UserService implements IUserService {
 	 */
 	private String createErrorCsvFile(List<UserError> users) {
 		Date date = Calendar.getInstance().getTime();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-ddhh:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh:mm:ss");
 		String strDate = dateFormat.format(date);
 
 		String filename = "errors/error_"+ strDate;
