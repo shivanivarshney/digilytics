@@ -37,6 +37,5 @@ just run the sql to create your database in mysql.
 
 7) I have provided the Postman collection which you can use to test both the endpoints 
 and also provided the sample CSV file named sample.csv in the root directory.
-Postman Collection: https://www.getpostman.com/collections/a21a008b116fa6901f9e
-
 ```
+[Postman Collection](https://www.getpostman.com/collections/a21a008b116fa6901f9e)
