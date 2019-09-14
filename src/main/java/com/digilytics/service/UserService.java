@@ -19,6 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * Implementing User service interface
+ */
 @Service
 public class UserService implements IUserService {
 
@@ -73,6 +76,11 @@ public class UserService implements IUserService {
 		return map;
 	}
 
+	/**
+	 * Private method to create error csv file with the list of error details
+	 * @param users contains list of user and errors details
+	 * @return filename of error csv file
+	 */
 	private String createErrorCsvFile(List<UserError> users) {
 		Date date = Calendar.getInstance().getTime();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-ddhh:mm:ss");
@@ -99,6 +107,12 @@ public class UserService implements IUserService {
 		return createFile.getName();
 	}
 
+	/**
+	 * Method to validate user rows with correct roles, valid email etc
+	 * @param user includes user information
+	 * @param roles with list of roles exist
+	 * @return error in the row if any
+	 */
 	private static String validateParameters(User user, List<String> roles)
 	{
 		List<String> errors = new ArrayList<>();

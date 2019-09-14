@@ -22,7 +22,7 @@ public class UserDAO implements IUserDAO {
 
 	@Override
 	public List getAllRoles() {
-		return entityManager.createQuery("Select name from Role").setMaxResults(10).getResultList();
+		return entityManager.createQuery("Select name from Role").getResultList();
 	}
 
 }
